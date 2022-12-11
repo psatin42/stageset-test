@@ -15,6 +15,10 @@ function App() {
       console.log('Websocket connection established');
       console.log(socket.id);
     });
+    return () => {
+      console.log('Connection closed');
+      socket.disconnect();
+    }
   }, []);
   useEffect(() => {
     console.log('from useEffect');
@@ -24,6 +28,11 @@ function App() {
     console.log('updating');
     setInfo(update);
   })
+  socket.on("connect_error", () => {
+  setTimeout(() => {
+    socket.connect();
+  }, 1000);
+});
   function changeHandler(e) {
     setInfo(e.target.value);
   }

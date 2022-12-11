@@ -57,6 +57,10 @@ io.on('connection', (socket) => {
     console.log(info);
     socket.local.emit('from server', info);
   });
+  socket.on('disconnect', () => {
+    console.log('Connection closed');
+    socket.disconnect(true);
+  })
 });
 
 server.listen(PORT, () => console.log(`Happy to see you, my Lord, on port ${PORT}`));
