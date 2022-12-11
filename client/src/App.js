@@ -1,12 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+const { io } = require("socket.io-client");
 
 function App() {
   const [info, setInfo] = useState('');
   const [error, setError] = useState(null);
+  const socket = io("ws://localhost:3001/");
+  useEffect(() => {
+    console.log('component mount');
+    socket.on("connect", () => {
+      console.log('Websocket connection established');
+      console.log(socket.id);
+    });
+  }, []);
+  useEffect(() => {
+    console.log('from useEffect');
+    socket.emit('update', info);
+  }, [info])
+  socket.on('from server', (update) => {
+    console.log('updating');
+    setInfo(update);
+  })
   function changeHandler(e) {
     setInfo(e.target.value);
   }
